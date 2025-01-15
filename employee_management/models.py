@@ -2,13 +2,13 @@ from django.db import models
 
 # Create your models here.
 class Team(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     
     
 class Permission(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
 
 class Role(models.Model):
     ACCESS_LEVEL_CHOICES = [
@@ -20,9 +20,9 @@ class Role(models.Model):
     ]
     
     
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    access_level = models.CharField(max_length=50, choices=ACCESS_LEVEL_CHOICES, default="Employee")
+    access_level = models.CharField(max_length=100, choices=ACCESS_LEVEL_CHOICES, default="Employee")
     reports_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
     team = models.ManyToManyField(Team)
     permission = models.ManyToManyField(Permission)
@@ -45,10 +45,11 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=100)
+    phone = models.CharField(max_length=255)
+    birth_date = models.DateField(null=True)
     join_date = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_STATUS_CHOICES)
-    social_handle = models.CharField(max_length=100, null=True)
+    social_handle = models.CharField(max_length=255, null=True)
     employment_status = models.CharField(max_length=50, choices=EMPLOYMNET_STATUS_CHOICES, default=EMPLOYMENT_STATUS_ACTIVE)
     role = models.ForeignKey(Role, on_delete=models.PROTECT)
     team = models.ManyToManyField(Team)
@@ -57,7 +58,8 @@ class Employee(models.Model):
 
     
 class Education(models.Model):
-    institution = models.CharField(max_length=100)
+    institution = models.CharField(max_length=255)
+    course_of_study = models.CharField(max_length=255, null=True)
     year_admitted = models.DateField()
     year_graduated = models.DateField()
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
