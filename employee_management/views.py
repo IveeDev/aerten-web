@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.decorators import action
 from .models import Permission, Team, Role, Employee, Education, Address
 from .serializers import PermissionSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer
@@ -43,7 +43,7 @@ class RoleViewSet(BaseViewSet):
     
 
 
-class EmployeeViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = Employee.objects.prefetch_related('team').select_related('role').all()
     serializer_class = EmployeeSerializer
     filterset_class = EmployeeFilter
@@ -55,18 +55,12 @@ class EmployeeViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [AllowAny()]
+            return [IsAuthenticated()]
         return [IsAdminOrReadOnly()]
     
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
         (employee, created) = Employee.objects.get_or_create(user_id=request.user.id, defaults={"join_date": timezone.now()})
-        
-         # If employee is newly created, make sure it has a role
-        if created and employee.role is None:
-            default_role = Role.objects.filter(name="Employee").first()
-            employee.role = default_role
-            employee.save()
             
         if request.method == 'GET':
             serializer = EmployeeSerializer(employee)

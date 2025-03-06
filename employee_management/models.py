@@ -119,7 +119,7 @@ class Employee(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.id:  # Generate ID only if it doesn't exist
-            self.id = f"#{uuid.uuid4().hex[:13].upper()}"  # 13 random chars after #
+            self.id = {uuid.uuid4().hex[:13].upper()}  # 13 random chars after #
         super().save(*args, **kwargs)
     
     
