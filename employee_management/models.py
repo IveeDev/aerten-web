@@ -79,7 +79,7 @@ class Employee(models.Model):
     
     id = models.CharField(
         primary_key=True,  # Make it the primary key
-        max_length=14, 
+        max_length=13, 
         unique=True, 
         editable=False
     )
@@ -100,7 +100,7 @@ class Employee(models.Model):
         return full_name
     
     def __str__(self):
-        return f"{self.user.username} - {self.role.title} ({self.access_level})"
+        return f"{self.user.username} - {self.role.title if self.role else 'No Role'} ({self.access_level})"
     
     @admin.display(ordering='user__first_name')
     def first_name(self):
@@ -119,7 +119,7 @@ class Employee(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.id:  # Generate ID only if it doesn't exist
-            self.id = {uuid.uuid4().hex[:13].upper()}  # 13 random chars after #
+            self.id = uuid.uuid4().hex[:12].upper()  # 13 random chars after #
         super().save(*args, **kwargs)
     
     

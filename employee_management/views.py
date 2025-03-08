@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.decorators import action
 from .models import Permission, Team, Role, Employee, Education, Address
-from .serializers import PermissionSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer
+from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer
 from .filters import RoleFilter, EmployeeFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
@@ -60,7 +60,7 @@ class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, Upda
     
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (employee, created) = Employee.objects.get_or_create(user_id=request.user.id, defaults={"join_date": timezone.now()})
+        (employee, created) = Employee.objects.get_or_create(user_id=request.user.id, defaults={"join_date": timezone.now().date()})
             
         if request.method == 'GET':
             serializer = EmployeeSerializer(employee)
@@ -71,20 +71,25 @@ class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, Upda
             serializer.save()
             return Response(serializer.data)
     
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    @action(detail=False, methods=['post'], url_path='assign_role', serializer_class=AssignRoleSerializer, permission_classes=[IsAdminUser])
     def assign_role(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        role_id = request.data.get('role_id')
+        serializer = AssignRoleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if not role_id:
-            return Response({"error": "Role ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        role = serializer.validated_data["role_id"]
 
-        role = get_object_or_404(Role, pk=role_id)
-        employee.role = role
-        employee.save()
+        if "employee_id" in serializer.validated_data:
+            employee = serializer.validated_data["employee_id"]
+            employee.role = role
+            employee.save()
+            return Response({"message": f"Role assigned to employee {employee.id}"}, status=status.HTTP_200_OK)
 
-        return Response({"message": f"Role '{role.name}' assigned to {employee.user.username}"}, status=status.HTTP_200_OK)
-
+        if "employee_ids" in serializer.validated_data:
+            employees = serializer.validated_data["employee_ids"]
+            for employee in employees:
+                employee.role = role
+                employee.save()
+            return Response({"message": f"Role assigned to {len(employees)} employees"}, status=status.HTTP_200_OK)
 class EducationViewSet(BaseViewSet):
     serializer_class = EducationSerializer
     permission_classes = [IsAuthenticated]

@@ -40,6 +40,24 @@ class RoleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"title": "A role with this name already exists."})
         return super().create(validated_data)
 
+class AssignRoleSerializer(serializers.Serializer):
+    role_id = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
+    employee_ids = serializers.ListField(
+        child=serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all()),
+        required=False  # Make it optional
+    )
+    employee_id = serializers.PrimaryKeyRelatedField(
+        queryset=Employee.objects.all(),
+        required=False  # Make it optional
+    )
+
+
+    def validate(self, data):
+        if not data.get("employee_id") and not data.get("employee_ids"):
+            raise serializers.ValidationError("Either 'employee_id' or 'employee_ids' must be provided.")
+        if data.get("employee_id") and data.get("employee_ids"):
+            raise serializers.ValidationError("Provide only 'employee_id' OR 'employee_ids', not both.")
+        return data
 
 class EmployeeSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
