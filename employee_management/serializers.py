@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from employee_management.models import Employee, Role, Permission, Team, Education, Address
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from employee_management.models import Employee, Role, Permission, Team, Education, Address, Request
+
+
+
+User = get_user_model()
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,7 +74,33 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level']
     
+
+class RequestSerializer(serializers.ModelSerializer):
+    approver = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(employee__access_level__in=["Admin"]),  # Only Admins & Managers
+        required=False
+    )
+    class Meta:
+        model = Request
+        fields = ["id", "request_type", "detail", "approver", "status"]
+        read_only_fields = ["employee", "date_requested"]
     
+    def create(self, validated_data):
+        # Set default status
+        validated_data['status'] = 'Pending'  
+        return super().create(validated_data)
+        
+    
+    def update(self, instance, validated_data):
+        """Allow only admins or managers to update status"""
+        request = self.context['request']
+        user = request.user
+
+        # Prevent regular employees from updating status
+        if "status" in validated_data and not (user.is_staff or user.employee.access_level in ['Admin']):
+            validated_data.pop("status")
+
+        return super().update(instance, validated_data)
     
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:

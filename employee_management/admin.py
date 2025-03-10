@@ -44,6 +44,12 @@ class EmployeeAdmin(admin.ModelAdmin):
         return ", ".join([team.name for team in employee.team.all()])
     get_team.short_description = 'Team'
     
+
+@admin.register(models.Request)    
+class RequestAdmin(admin.ModelAdmin):
+    list_display = ["id", "request_type", "detail", "approver", "status", "date_requested"]
+    
+    
 @admin.register(models.Education)
 class EducationAdmin(admin.ModelAdmin):
     list_display = ["id", "institution", "course_of_study", "start_date", "end_date", "employee"]

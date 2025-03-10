@@ -3,13 +3,14 @@ from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.decorators import action
-from .models import Permission, Team, Role, Employee, Education, Address
-from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer
+from .models import Permission, Team, Role, Employee, Education, Address, Request
+from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer, RequestSerializer
 from .filters import RoleFilter, EmployeeFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
@@ -90,6 +91,23 @@ class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, Upda
                 employee.role = role
                 employee.save()
             return Response({"message": f"Role assigned to {len(employees)} employees"}, status=status.HTTP_200_OK)
+        
+
+class RequestViewSet(BaseViewSet):
+    serializer_class = RequestSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if not user:
+            return Request.objects.none()     
+        return Request.objects.filter(employee__user=user)
+    
+    def perform_create(self, serializer):
+        serializer.save(employee=self.request.user.employee)        
+     
+    
+        
 class EducationViewSet(BaseViewSet):
     serializer_class = EducationSerializer
     permission_classes = [IsAuthenticated]

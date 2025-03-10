@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib import admin
 from django.conf import settings
 
+
 # Create your models here.
 class Team(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -122,7 +123,30 @@ class Employee(models.Model):
             self.id = uuid.uuid4().hex[:12].upper()  # 13 random chars after #
         super().save(*args, **kwargs)
     
+
+class Request(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
     
+    TYPE_CHOICES = [
+        ('Leave', 'Leave'),
+        ('Expense', 'Expense'),
+        ('Remote Work', 'Remote Work'),
+        ('Other', 'Other'),
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='requests')
+    request_type = models.CharField(max_length=50, choices=TYPE_CHOICES)
+    detail =  models.TextField()
+    approver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='approvals')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    date_requested = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.request_type} request by {self.employee.user.username}"
 
 class Education(models.Model):
     institution = models.CharField(max_length=255)

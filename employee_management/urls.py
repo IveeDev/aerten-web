@@ -10,6 +10,7 @@ router.register('permissions', views.PermissionViewSet)
 router.register('teams', views.TeamViewSet)
 router.register('roles', views.RoleViewSet)
 router.register('employees', views.EmployeeViewSet)
+router.register('requests', views.RequestViewSet, basename='requests')
 
 
 
