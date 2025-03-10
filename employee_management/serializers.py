@@ -77,13 +77,25 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class RequestSerializer(serializers.ModelSerializer):
     approver = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(employee__access_level__in=["Admin"]),  # Only Admins & Managers
+        queryset=User.objects.filter(employee__access_level__in=["Admin", "Manager"]),  # Only Admins & Managers
         required=False
     )
+    date_requested = serializers.DateTimeField(format='%B %d, %Y', read_only=True)
     class Meta:
         model = Request
-        fields = ["id", "request_type", "detail", "approver", "status"]
+        fields = ["id", "request_type", "detail", "approver", "date_requested", "status"]
         read_only_fields = ["employee", "date_requested"]
+    
+    def get_fields(self):
+        fields = super().get_fields()
+        user = self.context['request'].user
+
+        # If the user is not an admin or manager, hide the status field
+        if not (user.is_staff or user.employee.access_level in ["Admin", "Manager"]):
+            fields['status'].read_only = True  # Ensure status is read-only
+            fields['status'].default = "Pending"  # Set default value to "Pending"
+
+        return fields
     
     def create(self, validated_data):
         # Set default status
@@ -97,7 +109,7 @@ class RequestSerializer(serializers.ModelSerializer):
         user = request.user
 
         # Prevent regular employees from updating status
-        if "status" in validated_data and not (user.is_staff or user.employee.access_level in ['Admin']):
+        if "status" in validated_data and not (user.is_staff or user.employee.access_level in ['Admin', 'Manager']):
             validated_data.pop("status")
 
         return super().update(instance, validated_data)

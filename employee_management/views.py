@@ -13,7 +13,7 @@ from .models import Permission, Team, Role, Employee, Education, Address, Reques
 from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer, RequestSerializer
 from .filters import RoleFilter, EmployeeFilter
 from .pagination import DefaultPagination
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAdminOrManager
 
 
 
@@ -100,8 +100,48 @@ class RequestViewSet(BaseViewSet):
     def get_queryset(self):
         user = self.request.user
         if not user:
-            return Request.objects.none()     
+            return Request.objects.none()
+        if user.is_staff or user.employee.access_level in ["Admin", "Manager"]:
+            return Request.objects.all()     
         return Request.objects.filter(employee__user=user)
+    
+    
+    def get_serializer_context(self):
+        # Pass the request object to the serializer context
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
+    @action(detail=True, methods=['PATCH'], permission_classes=[IsAdminOrManager])
+    def approve(self, request, pk=None):
+        request_obj = self.get_object()
+        
+        if request_obj.status == "Approved":
+            return Response(
+                {'detail': 'This request is already approved.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        request_obj.status = 'Approved'
+        request_obj.approver = request.user
+        request_obj.save()
+        
+        serializer = self.get_serializer(request_obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['PATCH'], permission_classes=[IsAdminOrManager])
+    def reject(self, request, pk=None):
+        request_obj = self.get_object()
+        
+        if request_obj.status == "Rejected":
+            return Response(
+                {"detail": "This request is already rejected."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        request_obj.status = "Rejected"
+        request_obj.approver = request.user
+        request_obj.save()
+        
+        serializer = self.get_serializer(request_obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def perform_create(self, serializer):
         serializer.save(employee=self.request.user.employee)        
