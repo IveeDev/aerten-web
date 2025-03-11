@@ -1,5 +1,5 @@
 import django_filters
-from .models import Role, Employee
+from .models import Role, Employee, Request
 
 class RoleFilter(django_filters.FilterSet):
     class Meta:
@@ -16,4 +16,11 @@ class EmployeeFilter(django_filters.FilterSet):
             "user__first_name": ["exact", "icontains"],
             "user__last_name": ["exact", "icontains"],
             "role": ["exact"],
+        }
+
+class RequestFilter(django_filters.FilterSet):
+    class Meta:
+        model = Request
+        fields = {
+            "status": ["exact", "icontains"],
         }

@@ -11,7 +11,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 from rest_framework.decorators import action
 from .models import Permission, Team, Role, Employee, Education, Address, Request
 from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer, RequestSerializer
-from .filters import RoleFilter, EmployeeFilter
+from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, IsAdminOrManager
 
@@ -44,9 +44,10 @@ class RoleViewSet(BaseViewSet):
     
 
 
-class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class EmployeeViewSet(ModelViewSet):
     queryset = Employee.objects.prefetch_related('team').select_related('role').all()
     serializer_class = EmployeeSerializer
+    permission_classes = [IsAdminUser]
     filterset_class = EmployeeFilter
     pagination_class = DefaultPagination
     search_fields = ["user__first_name", "user__last_name"]
@@ -96,6 +97,7 @@ class EmployeeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, Upda
 class RequestViewSet(BaseViewSet):
     serializer_class = RequestSerializer
     permission_classes = [IsAuthenticated]
+    filterset_class = RequestFilter
     
     def get_queryset(self):
         user = self.request.user
@@ -111,6 +113,12 @@ class RequestViewSet(BaseViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+    
+    def get_serializer(self, *args, **kwargs):
+        # Pass the instance to the serializer for custom actions
+        if self.action in ['approve', 'reject']:
+            kwargs['instance'] = self.get_object()
+        return super().get_serializer(*args, **kwargs)
     
     @action(detail=True, methods=['PATCH'], permission_classes=[IsAdminOrManager])
     def approve(self, request, pk=None):
