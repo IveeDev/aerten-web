@@ -78,7 +78,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     approver = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.filter(employee__access_level__in=["Admin", "Manager"]),  # Only Admins & Managers
-        required=False
+        required=False,
+        allow_null=True,  # Explicitly allow null values
+        default=None
     )
     date_requested = serializers.DateTimeField(format='%B %d, %Y', read_only=True)
     class Meta:
@@ -94,10 +96,12 @@ class RequestSerializer(serializers.ModelSerializer):
         if not (user.is_staff or user.employee.access_level in ["Admin", "Manager"]):
             fields['status'].read_only = True  # Ensure status is read-only
             fields['status'].default = "Pending"  # Set default value to "Pending"
+            fields['approver'].read_only = True
 
         return fields
     
     def create(self, validated_data):
+        validated_data.pop('approver', None)
         # Set default status
         validated_data['status'] = 'Pending'  
         return super().create(validated_data)

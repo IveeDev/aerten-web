@@ -13,7 +13,7 @@ from .models import Permission, Team, Role, Employee, Education, Address, Reques
 from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer, RequestSerializer
 from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
-from .permissions import IsAdminOrReadOnly, IsAdminOrManager
+from .permissions import IsAdminOrReadOnly, IsAdminOrManager, IsAdminManagerOrOwner
 
 
 
@@ -96,7 +96,7 @@ class EmployeeViewSet(ModelViewSet):
 
 class RequestViewSet(BaseViewSet):
     serializer_class = RequestSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminManagerOrOwner]
     filterset_class = RequestFilter
     
     def get_queryset(self):
@@ -108,48 +108,52 @@ class RequestViewSet(BaseViewSet):
         return Request.objects.filter(employee__user=user)
     
     
+    
     def get_serializer_context(self):
         # Pass the request object to the serializer context
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
     
-    def get_serializer(self, *args, **kwargs):
-        # Pass the instance to the serializer for custom actions
-        if self.action in ['approve', 'reject']:
-            kwargs['instance'] = self.get_object()
-        return super().get_serializer(*args, **kwargs)
+
+    
+    def destroy(self, request, *args, **kwargs):
+        request_obj = self.get_object()
+        
+        if request_obj.status in ["Approved", "Reject"]:
+            return Response(
+                {"detail": "Cannot delete a request that is approved or rejected."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Perform the deletion
+        request_obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
     @action(detail=True, methods=['PATCH'], permission_classes=[IsAdminOrManager])
     def approve(self, request, pk=None):
-        request_obj = self.get_object()
-        
-        if request_obj.status == "Approved":
-            return Response(
-                {'detail': 'This request is already approved.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        request_obj.status = 'Approved'
-        request_obj.approver = request.user
-        request_obj.save()
-        
-        serializer = self.get_serializer(request_obj)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self._update_request_status(request, pk, "Approved")
     
     @action(detail=True, methods=['PATCH'], permission_classes=[IsAdminOrManager])
     def reject(self, request, pk=None):
+        return self._update_request_status(request, pk, "Rejected")
+    
+    def _update_request_status(self, request, pk, new_status):
         request_obj = self.get_object()
         
-        if request_obj.status == "Rejected":
+        if request_obj.status == new_status:
             return Response(
-                {"detail": "This request is already rejected."}, status=status.HTTP_400_BAD_REQUEST
+                {"detail": f"This request is already {new_status}."}, status=status.HTTP_400_BAD_REQUEST
             )
-        request_obj.status = "Rejected"
+        
+        request_obj.status = new_status
         request_obj.approver = request.user
         request_obj.save()
         
-        serializer = self.get_serializer(request_obj)
+        # Return the updated request
+        serializer = self.get_serializer(request_obj)  # Pass only the instance
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     
     def perform_create(self, serializer):
         serializer.save(employee=self.request.user.employee)        
