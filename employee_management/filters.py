@@ -22,5 +22,5 @@ class RequestFilter(django_filters.FilterSet):
     class Meta:
         model = Request
         fields = {
-            "status": ["exact", "icontains"],
+            "status": ["exact"],
         }

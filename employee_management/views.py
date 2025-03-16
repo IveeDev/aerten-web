@@ -66,7 +66,10 @@ class EmployeeViewSet(ModelViewSet):
             
         if request.method == 'GET':
             serializer = EmployeeSerializer(employee)
-            return Response(serializer.data)
+            response_data = serializer.data
+            if not employee.role or not employee.team.exists():
+                response_data["message"] = "Your profile is incomplete. Please contact the admin to assign a role and team."
+            return Response(response_data)
         elif request.method == 'PUT':
             serializer = EmployeeSerializer(employee, data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -103,7 +106,9 @@ class RequestViewSet(BaseViewSet):
         user = self.request.user
         if not user:
             return Request.objects.none()
-        if user.is_staff or user.employee.access_level in ["Admin", "Manager"]:
+        
+        (employee, created) = Employee.objects.get_or_create(user_id=user.id, defaults={"join_date": timezone.now().date()})
+        if user.is_staff or employee.access_level in ["Admin", "Manager"]:
             return Request.objects.all()     
         return Request.objects.filter(employee__user=user)
     
