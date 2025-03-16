@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from .signals import employee_created
 from employee_management.models import Employee, Role, Permission, Team, Education, Address, Request
 
 
@@ -73,6 +74,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level']
+    
+    
     
 
 class RequestSerializer(serializers.ModelSerializer):
