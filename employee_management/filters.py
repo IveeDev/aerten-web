@@ -16,6 +16,9 @@ class EmployeeFilter(django_filters.FilterSet):
             "user__first_name": ["exact", "icontains"],
             "user__last_name": ["exact", "icontains"],
             "role": ["exact"],
+            "gender": ["exact"],
+            "employment_status": ["exact"],
+            "team": ["exact"]
         }
 
 class RequestFilter(django_filters.FilterSet):
@@ -23,4 +26,5 @@ class RequestFilter(django_filters.FilterSet):
         model = Request
         fields = {
             "status": ["exact"],
+            "date_requested": ["icontains"] 
         }

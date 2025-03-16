@@ -44,7 +44,7 @@ class RoleViewSet(BaseViewSet):
     
 
 
-class EmployeeViewSet(ModelViewSet):
+class EmployeeViewSet(BaseViewSet):
     queryset = Employee.objects.prefetch_related('team').select_related('role').all()
     serializer_class = EmployeeSerializer
     permission_classes = [IsAdminUser]
