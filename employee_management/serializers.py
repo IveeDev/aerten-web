@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from .signals import employee_created
-from employee_management.models import Employee, Role, Permission, Team, Education, Address, Request
+from employee_management.models import Employee, Role, Permission, Team, Education, Address, Request, EmployeeImage
 
 
 
@@ -65,17 +65,28 @@ class AssignRoleSerializer(serializers.Serializer):
         if data.get("employee_id") and data.get("employee_ids"):
             raise serializers.ValidationError("Provide only 'employee_id' OR 'employee_ids', not both.")
         return data
+    
+class EmployeeImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeImage
+        fields = ["id", "image"]
+    
+    def create(self, validated_data):
+        employee_id = self.context["employee_id"]
+        return EmployeeImage.objects.create(employee_id=employee_id, **validated_data)
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    image = EmployeeImageSerializer(read_only=True)
     user_id = serializers.IntegerField(read_only=True)
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
     team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
     
     class Meta:
         model = Employee
-        fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level']
+        fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level', 'image', 'educations']
     
-    
+
+
     
 
 class RequestSerializer(serializers.ModelSerializer):

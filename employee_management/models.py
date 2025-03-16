@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib import admin
 from django.conf import settings
+from employee_management.validators import validate_file_size
 
 
 # Create your models here.
@@ -122,7 +123,11 @@ class Employee(models.Model):
         if not self.id:  # Generate ID only if it doesn't exist
             self.id = uuid.uuid4().hex[:12].upper()  # 13 random chars after #
         super().save(*args, **kwargs)
-    
+        
+
+class EmployeeImage(models.Model):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True, related_name="image")
+    image = models.ImageField(upload_to='employee_management/images', validators=[validate_file_size])
 
 class Request(models.Model):
     STATUS_CHOICES = [

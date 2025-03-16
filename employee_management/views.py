@@ -9,8 +9,8 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.decorators import action
-from .models import Permission, Team, Role, Employee, Education, Address, Request
-from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EducationSerializer, AddressSerializer, RequestSerializer
+from .models import Permission, Team, Role, Employee, EmployeeImage, Education, Address, Request
+from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EmployeeImageSerializer, EducationSerializer, AddressSerializer, RequestSerializer
 from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, IsAdminOrManager, IsAdminManagerOrOwner
@@ -95,7 +95,19 @@ class EmployeeViewSet(BaseViewSet):
                 employee.role = role
                 employee.save()
             return Response({"message": f"Role assigned to {len(employees)} employees"}, status=status.HTTP_200_OK)
-        
+
+
+class EmployeeImageViewSet(ModelViewSet):
+    serializer_class = EmployeeImageSerializer
+    
+    def get_queryset(self):
+        employee_id = self.kwargs.get("employee_pk")
+        if not employee_id:
+            return EmployeeImage.objects.none()
+        return EmployeeImage.objects.filter(employee_id=employee_id)
+    
+    def get_serializer_context(self):
+        return {'employee_id': self.kwargs['employee_pk']}
 
 class RequestViewSet(BaseViewSet):
     serializer_class = RequestSerializer

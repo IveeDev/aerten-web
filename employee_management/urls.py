@@ -17,6 +17,7 @@ router.register('requests', views.RequestViewSet, basename='requests')
 employees_router = routers.NestedDefaultRouter(router, 'employees', lookup='employee')
 employees_router.register('educations', views.EducationViewSet, basename='employee-educations')
 employees_router.register('address', views.AddressViewSet, basename='employee-address')
+employees_router.register('image', views.EmployeeViewSet, basename='employee-image')
 
 
 urlpatterns = router.urls + employees_router.urls
