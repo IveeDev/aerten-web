@@ -99,15 +99,18 @@ class EmployeeViewSet(BaseViewSet):
 
 class EmployeeImageViewSet(ModelViewSet):
     serializer_class = EmployeeImageSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        employee_id = self.kwargs.get("employee_pk")
-        if not employee_id:
-            return EmployeeImage.objects.none()
-        return EmployeeImage.objects.filter(employee_id=employee_id)
+        user = self.request.user
+        
+        employee = user.employee
+        
+        return EmployeeImage.objects.filter(employee=employee)
     
-    def get_serializer_context(self):
-        return {'employee_id': self.kwargs['employee_pk']}
+    def get_object(self):
+        # Override get_object to return the EmployeeImage for the logged-in user
+        return self.get_queryset().first()
 
 class RequestViewSet(BaseViewSet):
     serializer_class = RequestSerializer

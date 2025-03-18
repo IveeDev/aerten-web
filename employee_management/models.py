@@ -85,7 +85,7 @@ class Employee(models.Model):
         unique=True, 
         editable=False
     )
-    phone = models.CharField(max_length=12)
+    phone = models.CharField(max_length=12, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     join_date = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_STATUS_CHOICES)
@@ -127,7 +127,10 @@ class Employee(models.Model):
 
 class EmployeeImage(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True, related_name="image")
-    image = models.ImageField(upload_to='employee_management/images', validators=[validate_file_size])
+    image = models.ImageField(upload_to='employee_management/images')
+    
+    def __str__(self):
+        return f"Image for {self.employee.user.username}"
 
 class Request(models.Model):
     STATUS_CHOICES = [

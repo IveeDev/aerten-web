@@ -69,21 +69,23 @@ class AssignRoleSerializer(serializers.Serializer):
 class EmployeeImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployeeImage
-        fields = ["id", "image"]
+        fields = ["image"]
     
     def create(self, validated_data):
-        employee_id = self.context["employee_id"]
-        return EmployeeImage.objects.create(employee_id=employee_id, **validated_data)
+        # Get the currently logged-in user
+        user = self.context['request'].user
+        
+        employee = user.employee
+        
+        # Check if an EmployeeImage already exists for this employee
+        if hasattr(employee, 'image'):
+            # If an image already exists, update it
+            employee.image.image = validated_data['image']
+            employee.image.save()
+            return employee.image
+        return EmployeeImage.objects.create(employee=employee, **validated_data)
 
-class EmployeeSerializer(serializers.ModelSerializer):
-    image = EmployeeImageSerializer(read_only=True)
-    user_id = serializers.IntegerField(read_only=True)
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
-    team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
-    
-    class Meta:
-        model = Employee
-        fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level', 'image', 'educations']
+
     
 
 
@@ -141,6 +143,7 @@ class EducationSerializer(serializers.ModelSerializer):
         employee_id = self.context['employee_id']
         return Education.objects.create(employee_id=employee_id, **validated_data)
 
+
 class AddressSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -152,3 +155,16 @@ class AddressSerializer(serializers.ModelSerializer):
         employee_id = self.context['employee_id']
         return Address.objects.create(employee_id=employee_id, **validated_data)
 
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    educations = EducationSerializer(many=True, read_only=True)
+    address = AddressSerializer(read_only=True)
+    image = EmployeeImageSerializer(read_only=True)
+    user_id = serializers.IntegerField(read_only=True)
+    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
+    team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
+    
+    class Meta:
+        model = Employee
+        fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level', 'image', 'educations', 'address']
