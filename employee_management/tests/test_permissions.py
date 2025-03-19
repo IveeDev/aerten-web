@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import status
+from model_bakery import baker
+from employee_management.models import Permission
 import pytest
 
 @pytest.fixture
@@ -7,6 +9,13 @@ def create_permission(api_client):
     def do_create_permission(permission):
         return api_client.post("/api/v1/permissions/", permission)
     return do_create_permission
+
+
+@pytest.fixture
+def update_permission(api_client):
+    def do_update_permission(id, permission):
+        return api_client.patch(f'/api/v1/permissions/{id}/', permission)
+    return do_update_permission
     
 
 @pytest.mark.django_db
@@ -40,3 +49,65 @@ class TestCreatePermission:
         # Assert
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data.get("id") > 0
+        
+        
+@pytest.mark.django_db
+class TestRetrievePermission:
+    def test_if_permission_exists_returns_200(self, api_client):
+        permission = baker.make(Permission)
+        
+        response = api_client.get(f"/api/v1/permissions/{permission.id}/")
+        
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {
+            "id": permission.id,
+            "name": permission.name,
+            "description": permission.description
+        }
+
+@pytest.mark.django_db
+class TestUpdatePermission:
+    def test_if_user_is_anonymous_returns_401(self, update_permission):
+        permission = baker.make(Permission)
+        data =  {"name": "a", "description": "aaaaaaa"}
+        
+        response = update_permission(permission.id, data)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        
+    def test_if_user_is_not_admin_returns_403(self, authenticate, update_permission):
+        permission = baker.make(Permission)
+        data = {"name": "updated_name", "description": "updated_description"}
+        authenticate(is_staff=False)
+        response = update_permission(permission.id, data)
+        
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        
+    def test_if_user_provides_invalid_data_returns_400(self, authenticate, update_permission):
+        permission = baker.make(Permission)
+        data = {"name": "", "description": ""}  # Invalid input
+        
+        authenticate(is_staff=True)
+        response = update_permission(permission.id, data)
+        
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        
+    def test_if_user_provides_valid_data_returns_200(self, authenticate, update_permission):
+        permission = baker.make(Permission)
+        data = {"name": "new_name", "description": "updated_description"}
+        
+        authenticate(is_staff=True)
+        response = update_permission(permission.id, data)
+        
+        assert response.status_code == status.HTTP_200_OK
+        permission.refresh_from_db()
+        assert permission.name == "new_name"
+    
+    def test_if_permission_does_not_exist_returns_404(self, authenticate, update_permission):
+        permission = baker.make(Permission)
+        data = {"name": "random", "description": "random"}
+        
+        authenticate(is_staff=True)
+        response = update_permission(9999999, data)
+        
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        
