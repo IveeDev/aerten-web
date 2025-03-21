@@ -62,7 +62,7 @@ class EmployeeViewSet(BaseViewSet):
     
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (employee, created) = Employee.objects.get_or_create(user_id=request.user.id, defaults={"join_date": timezone.now().date()})
+        (employee, created) = Employee.objects.get_or_create(user_id=request.user.id)
             
         if request.method == 'GET':
             serializer = EmployeeSerializer(employee)
@@ -122,7 +122,7 @@ class RequestViewSet(BaseViewSet):
         if not user:
             return Request.objects.none()
         
-        (employee, created) = Employee.objects.get_or_create(user_id=user.id, defaults={"join_date": timezone.now().date()})
+        (employee, created) = Employee.objects.get_or_create(user_id=user.id)
         if user.is_staff or employee.access_level in ["Admin", "Manager"]:
             return Request.objects.all()     
         return Request.objects.filter(employee__user=user)

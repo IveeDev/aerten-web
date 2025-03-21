@@ -105,6 +105,9 @@ DATABASES = {
         'HOST': 'localhost',
         'PASSWORD': 'iviidev',
         'PORT': '3306',
+        'TEST': {
+            'NAME': 'test_aerten',  # Explicitly set the test database name
+        },
 
     }
 }

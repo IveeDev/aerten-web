@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib import admin
 from django.conf import settings
+from django.utils import timezone
 from employee_management.validators import validate_file_size
 
 
@@ -87,7 +88,7 @@ class Employee(models.Model):
     )
     phone = models.CharField(max_length=12, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    join_date = models.DateField()
+    join_date = models.DateField(default=timezone.now)
     gender = models.CharField(max_length=1, choices=GENDER_STATUS_CHOICES)
     social_handle = models.CharField(max_length=255, null=True, blank=True)
     employment_status = models.CharField(max_length=50, choices=EMPLOYMENT_STATUS_CHOICES, default=EMPLOYMENT_STATUS_ACTIVE)
@@ -127,7 +128,7 @@ class Employee(models.Model):
 
 class EmployeeImage(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True, related_name="image")
-    image = models.ImageField(upload_to='employee_management/images')
+    image = models.ImageField(upload_to='employee_management/images', validators=[validate_file_size])
     
     def __str__(self):
         return f"Image for {self.employee.user.username}"

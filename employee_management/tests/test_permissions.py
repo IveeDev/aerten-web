@@ -152,9 +152,7 @@ class TestDeletePermission:
         assert response.status_code == status.HTTP_204_NO_CONTENT
         
     def test_if_invalid_id_returns_404(self, authenticate, delete_permission):
-        authenticate(is_staff=True)
-        permission = baker.make(Permission)
-        
+        authenticate(is_staff=True)        
         response = delete_permission(9999999)
         
         assert response.status_code == status.HTTP_404_NOT_FOUND
