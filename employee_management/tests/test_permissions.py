@@ -22,6 +22,12 @@ def delete_permission(api_client):
     def do_delete_permission(id):
         return api_client.delete(f'/api/v1/permissions/{id}/')
     return do_delete_permission
+
+@pytest.fixture
+def retrieve_permission(api_client):
+    def do_retrieve_permission(id):
+        return api_client.get(f'/api/v1/permissions/{id}/')
+    return do_retrieve_permission
     
 
 @pytest.mark.django_db
@@ -59,10 +65,10 @@ class TestCreatePermission:
         
 @pytest.mark.django_db
 class TestRetrievePermission:
-    def test_if_permission_exists_returns_200(self, api_client):
+    def test_if_permission_exists_returns_200(self, retrieve_permission):
         permission = baker.make(Permission)
         
-        response = api_client.get(f"/api/v1/permissions/{permission.id}/")
+        response = retrieve_permission(permission.id)
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {
@@ -70,6 +76,11 @@ class TestRetrievePermission:
             "name": permission.name,
             "description": permission.description
         }
+    
+    def test_if_permission_does_not_exists_return_404(self, retrieve_permission):
+        respose = retrieve_permission(99999)
+        
+        assert respose.status_code == status.HTTP_404_NOT_FOUND
 
 @pytest.mark.django_db
 class TestUpdatePermission:
