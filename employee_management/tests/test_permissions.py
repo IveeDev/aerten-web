@@ -16,6 +16,12 @@ def update_permission(api_client):
     def do_update_permission(id, permission):
         return api_client.patch(f'/api/v1/permissions/{id}/', permission)
     return do_update_permission
+
+@pytest.fixture
+def delete_permission(api_client):
+    def do_delete_permission(id):
+        return api_client.delete(f'/api/v1/permissions/{id}/')
+    return do_delete_permission
     
 
 @pytest.mark.django_db
@@ -103,7 +109,6 @@ class TestUpdatePermission:
         assert permission.name == "new_name"
     
     def test_if_permission_does_not_exist_returns_404(self, authenticate, update_permission):
-        permission = baker.make(Permission)
         data = {"name": "random", "description": "random"}
         
         authenticate(is_staff=True)
@@ -111,3 +116,34 @@ class TestUpdatePermission:
         
         assert response.status_code == status.HTTP_404_NOT_FOUND
         
+@pytest.mark.django_db
+class TestDeletePermission:
+    def test_if_user_is_anonymous_returns_401(self, delete_permission):
+        permission = baker.make(Permission)
+        response = delete_permission(permission.id)
+        
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        
+    
+    def test_if_user_is_not_admin_returns_403(self, authenticate, delete_permission):
+        authenticate(is_staff=False)
+        permission = baker.make(Permission)
+        response = delete_permission(permission.id)
+        
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        
+    def test_if_permission_exists_return_204(self, authenticate, delete_permission):
+        authenticate(is_staff=True)
+        permission = baker.make(Permission)
+        
+        response = delete_permission(permission.id)
+        
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        
+    def test_if_invalid_id_returns_404(self, authenticate, delete_permission):
+        authenticate(is_staff=True)
+        permission = baker.make(Permission)
+        
+        response = delete_permission(9999999)
+        
+        assert response.status_code == status.HTTP_404_NOT_FOUND
