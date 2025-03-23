@@ -52,7 +52,6 @@ class EmployeeViewSet(BaseViewSet):
     pagination_class = DefaultPagination
     search_fields = ["user__first_name", "user__last_name"]
     ordering_fields = ["user__first_name"]
-    # permission_classes = [IsAuthenticated]
     
     
     def get_permissions(self):
