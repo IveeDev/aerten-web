@@ -18,6 +18,8 @@ redis = "*"
 django-redis = "*"
 whitenoise = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
 
 [dev-packages]
 pytest = "*"
