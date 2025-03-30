@@ -34,7 +34,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
+
 
 
 
@@ -76,12 +77,12 @@ INTERNAL_IPS = [
 ]
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "https://yourfrontenddomain.com",
-#     "https://www.yourfrontenddomain.com",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://aerten-web.onrender.com/",
+    "localhost",
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'aerten.urls'
 
@@ -175,6 +176,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 MEDIA_URL = '/media/'
 
