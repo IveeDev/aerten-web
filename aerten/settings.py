@@ -185,8 +185,6 @@ DJOSER = {
 }
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-
 
 CACHES = {
     "default": {

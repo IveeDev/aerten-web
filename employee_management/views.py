@@ -16,7 +16,6 @@ from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSeriali
 from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, IsAdminOrManager, IsAdminManagerOrOwner
-from .tasks import notify_employees
 
 
 
