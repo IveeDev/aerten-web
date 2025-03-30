@@ -15,19 +15,14 @@ from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dle3w*fcqaf40p9&+@+@!ixx7czyu)gfng#@0s%k-d!hw1sl#n'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -52,7 +47,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middlewrae.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,24 +89,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'aerten.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'aerten',
-        'USER': 'root',
-        'HOST': 'localhost',
-        'PASSWORD': 'iviidev',
-        'PORT': '3306',
-        'TEST': {
-            'NAME': 'test_aerten',  # Explicitly set the test database name
-        },
-
-    }
-}
 
 
 # Password validation
@@ -207,7 +184,7 @@ LOGGING = {
             'class': 'logging.StreamHandler'
         },
         'file': {
-            'class': 'logging.Filehandler',
+            'class': 'logging.FileHandler',
             'filename': 'general.log',
             'formatter': 'verbose'
         }

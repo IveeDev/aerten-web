@@ -1,0 +1,120 @@
+2025-03-30 11:56:31,540 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 11:56:49,840 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 11:57:21,457 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/common.py changed, reloading.
+2025-03-30 11:57:22,833 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 11:58:37,931 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/common.py changed, reloading.
+2025-03-30 11:58:39,195 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 11:59:20,426 (WARNING) - django.request - Not Found: /favicon.ico
+2025-03-30 11:59:24,814 (WARNING) - django.request - Not Found: /api/employees/
+2025-03-30 11:59:33,885 (WARNING) - django.request - Unauthorized: /api/v1/employees/
+2025-03-30 11:59:34,122 (WARNING) - django.request - Unauthorized: /api/v1/employees/
+2025-03-30 11:59:45,967 (ERROR) - django.request - Internal Server Error: /api/v1/permissions/
+Traceback (most recent call last):
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/cache.py", line 29, in _decorator
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/cache.py", line 99, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 111 connecting to 127.0.0.1:6379. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/projects/aerten/employee_management/views.py", line 37, in list
+    cached_permissions = cache.get(cache_key)
+                         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/debug_toolbar/panels/cache.py", line 42, in wrapper
+    return panel._record_call(cache, name, original_method, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/debug_toolbar/panels/cache.py", line 151, in _record_call
+    value = original_method(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/cache.py", line 92, in get
+    value = self._get(key, default, version, client)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/cache.py", line 36, in _decorator
+    raise e.__cause__
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+            ^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/redis/commands/core.py", line 1822, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/home/iviidev/.local/share/virtualenvs/aerten-5eNgu6O3/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:6379. Connection refused.
+2025-03-30 12:02:30,384 (WARNING) - django.request - Unauthorized: /api/v1/teams/
+2025-03-30 12:03:42,323 (WARNING) - django.request - Not Found: /api/v1/employees/99999/
+2025-03-30 12:03:42,348 (WARNING) - django.request - Unauthorized: /api/v1/employees/B59E5C204B2B/
+2025-03-30 12:03:44,114 (WARNING) - django.request - Forbidden: /api/v1/employees/8E4917C2617F/
+2025-03-30 12:03:45,377 (WARNING) - django.request - Bad Request: /api/v1/employees/F2BAB8066BD8/
+2025-03-30 12:03:48,563 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-03-30 12:03:48,589 (WARNING) - django.request - Unauthorized: /api/v1/employees/CC1116F961EC/
+2025-03-30 12:03:51,119 (WARNING) - django.request - Forbidden: /api/v1/employees/4306C0E298AB/
+2025-03-30 12:03:53,469 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-03-30 12:03:53,483 (WARNING) - django.request - Unauthorized: /api/v1/permissions/
+2025-03-30 12:03:54,748 (WARNING) - django.request - Forbidden: /api/v1/permissions/
+2025-03-30 12:03:56,128 (WARNING) - django.request - Bad Request: /api/v1/permissions/
+2025-03-30 12:03:57,373 (WARNING) - django.request - Not Found: /api/v1/permissions/99999/
+2025-03-30 12:03:57,392 (WARNING) - django.request - Unauthorized: /api/v1/permissions/3/
+2025-03-30 12:03:58,933 (WARNING) - django.request - Forbidden: /api/v1/permissions/4/
+2025-03-30 12:04:00,113 (WARNING) - django.request - Bad Request: /api/v1/permissions/5/
+2025-03-30 12:04:02,678 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-03-30 12:04:02,694 (WARNING) - django.request - Unauthorized: /api/v1/permissions/7/
+2025-03-30 12:04:03,846 (WARNING) - django.request - Forbidden: /api/v1/permissions/8/
+2025-03-30 12:04:06,163 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-03-30 12:06:17,638 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/common.py changed, reloading.
+2025-03-30 12:06:19,614 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 12:06:44,355 (WARNING) - django.request - Not Found: /api/v1/employees/99999/
+2025-03-30 12:06:44,414 (WARNING) - django.request - Unauthorized: /api/v1/employees/9F3AC0AEA4B7/
+2025-03-30 12:06:46,077 (WARNING) - django.request - Forbidden: /api/v1/employees/09027B81C50D/
+2025-03-30 12:06:47,324 (WARNING) - django.request - Bad Request: /api/v1/employees/FC131AD32BE4/
+2025-03-30 12:06:49,621 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-03-30 12:06:49,690 (WARNING) - django.request - Unauthorized: /api/v1/employees/D8FB73574CD1/
+2025-03-30 12:06:50,742 (WARNING) - django.request - Forbidden: /api/v1/employees/C272F8615C6C/
+2025-03-30 12:06:52,787 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-03-30 12:06:52,840 (WARNING) - django.request - Unauthorized: /api/v1/permissions/
+2025-03-30 12:06:53,864 (WARNING) - django.request - Forbidden: /api/v1/permissions/
+2025-03-30 12:06:54,875 (WARNING) - django.request - Bad Request: /api/v1/permissions/
+2025-03-30 12:06:56,257 (WARNING) - django.request - Not Found: /api/v1/permissions/99999/
+2025-03-30 09:41:31,763 (WARNING) - django.request - Unauthorized: /api/v1/permissions/3/
+2025-03-30 12:07:00,295 (WARNING) - django.request - Forbidden: /api/v1/permissions/4/
+2025-03-30 12:07:01,398 (WARNING) - django.request - Bad Request: /api/v1/permissions/5/
+2025-03-30 12:07:03,556 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-03-30 12:07:03,605 (WARNING) - django.request - Unauthorized: /api/v1/permissions/7/
+2025-03-30 12:07:04,610 (WARNING) - django.request - Forbidden: /api/v1/permissions/8/
+2025-03-30 12:07:06,603 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-03-30 12:14:02,261 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
