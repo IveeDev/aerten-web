@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
 import os
 from pathlib import Path
 from datetime import timedelta
@@ -22,6 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-dle3w*fcqaf40p9&+@+@!ixx7czyu)gfng#@0s%k-d!hw1sl#n'
+
+ALLOWED_HOSTS = []
 
 
 
@@ -67,6 +75,7 @@ INTERNAL_IPS = [
 #     "https://yourfrontenddomain.com",
 #     "https://www.yourfrontenddomain.com",
 # ]
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'aerten.urls'
@@ -109,6 +118,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'aerten',
+        'USER': 'root',
+        'HOST': 'localhost',
+        'PASSWORD': 'iviidev',
+        'PORT': '3306',
+        'TEST': {
+            'NAME': 'test_aerten',  # Explicitly set the test database name
+        },
+
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

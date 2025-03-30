@@ -118,3 +118,6 @@ redis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:6379. Connec
 2025-03-30 12:07:04,610 (WARNING) - django.request - Forbidden: /api/v1/permissions/8/
 2025-03-30 12:07:06,603 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
 2025-03-30 12:14:02,261 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 16:14:04,571 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
+2025-03-30 16:14:07,779 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 16:14:26,380 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
