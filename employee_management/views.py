@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -14,6 +16,7 @@ from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSeriali
 from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, IsAdminOrManager, IsAdminManagerOrOwner
+from .tasks import notify_employees
 
 
 
@@ -27,6 +30,18 @@ class PermissionViewSet(BaseViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
     permission_classes = [IsAdminOrReadOnly]
+    
+    
+    def list(self, request, *args, **kwargs):
+        cache_key = "permissions_list"
+        cached_permissions = cache.get(cache_key)
+
+        if cached_permissions:
+            return Response(cached_permissions)
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data)
+        return response
 
 class TeamViewSet(BaseViewSet):
     queryset = Team.objects.all()
@@ -42,6 +57,17 @@ class RoleViewSet(BaseViewSet):
     permission_classes = [IsAdminOrReadOnly]
     
     
+    def list(self, request, *args, **kwargs):
+        cache_key = "roles_list"
+        cached_roles = cache.get(cache_key)
+
+        if cached_roles:
+            return Response(cached_roles)
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, timeout=3600)  # Cache for 1 hour
+        return response
+    
 
 
 class EmployeeViewSet(BaseViewSet):
@@ -52,12 +78,14 @@ class EmployeeViewSet(BaseViewSet):
     pagination_class = DefaultPagination
     search_fields = ["user__first_name", "user__last_name"]
     ordering_fields = ["user__first_name"]
+
     
     
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsAuthenticated()]
         return [IsAdminOrReadOnly()]
+    
     
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):

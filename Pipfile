@@ -14,12 +14,16 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
 django-cors-headers = "*"
+redis = "*"
+celery = "*"
+django-redis = "*"
 
 [dev-packages]
 pytest = "*"
 pytest-django = "*"
 pytest-watch = "*"
 model-bakery = "*"
+locust = "*"
 
 [requires]
 python_version = "3.12"
