@@ -25,6 +25,7 @@ admin.site.site_header = "Aerten Web-app Admin"
 admin.site.index_title = "Admin"
 
 urlpatterns = [
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('api/v1/', include('employee_management.urls')),
     path('auth/', include('djoser.urls')),
