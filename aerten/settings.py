@@ -34,7 +34,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "aerten-web.onrender.com localhost 127.0.0.1").split()
+
 
 
 
@@ -76,12 +77,12 @@ INTERNAL_IPS = [
 ]
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "https://yourfrontenddomain.com",
-#     "https://www.yourfrontenddomain.com",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://aerten-web.onrender.com",
+    "localhost 127.0.0.1",
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'aerten.urls'
 
@@ -153,7 +154,6 @@ DATABASES = {
 #     }
 # }
 
-# postgresql://aerten_django_render_user:v3WNyZUG0K4unuHsBX43C10oKhMj7jvN@dpg-cvkpg9ruibrs73a4qpq0-a/aerten_django_render
 
 database_url = os.environ.get("DATABASE_URL")
 DATABASES["default"] = dj_database_url.parse(database_url)
