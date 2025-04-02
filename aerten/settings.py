@@ -33,9 +33,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com']
 
-# CSRF_TRUSTED_ORIGINS = ['']
+CSRF_TRUSTED_ORIGINS = ['https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com']
 
 
 
@@ -77,12 +77,13 @@ INTERNAL_IPS = [
 ]
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://aerten-web.onrender.com",
-#     "http://localhost",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com",
+    # "https://yourfrontenddomain.com",
+    "http://localhost",
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'aerten.urls'
 
