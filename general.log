@@ -121,3 +121,23 @@ redis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:6379. Connec
 2025-03-30 16:14:04,571 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
 2025-03-30 16:14:07,779 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
 2025-03-30 16:14:26,380 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
+2025-03-30 20:34:35,210 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:37:38,681 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:37:40,726 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:38:28,538 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:38:30,927 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:39:45,078 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:39:48,227 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:41:37,214 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:41:39,466 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:42:17,378 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:42:19,410 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:42:58,721 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:43:00,068 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:43:26,923 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:43:30,406 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:43:33,580 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-03-30 20:43:35,440 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-03-30 20:52:27,348 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings.py changed, reloading.
+2025-04-02 18:02:21,371 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-02 18:02:50,578 (WARNING) - django.request - Not Found: /favicon.ico
