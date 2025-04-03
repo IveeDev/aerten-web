@@ -17,7 +17,7 @@ from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,18 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
-SECRET_KEY =  'django-insecure-dle3w*fcqaf40p9&+@+@!ixx7czyu)gfng#@0s%k-d!hw1sl#n'
 
 
 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
-ALLOWED_HOSTS = ['web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com', '127.0.0.1']
+
+
 
 CSRF_TRUSTED_ORIGINS = ['https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com']
 
@@ -129,33 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'aerten',
-        'USER': 'root',
-        'HOST': 'localhost',
-        'PASSWORD': 'iviidev',
-        'PORT': '3306',
-        'TEST': {
-            'NAME': 'test_aerten',  # Explicitly set the test database name
-        },
-
-    }
-}
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.environ.get('NAME'),
-#         'USER': os.environ.get('USER'),
-#         'HOST': os.environ.get('HOST'),
-#         'PASSWORD': os.environ.get('PASSWORD'),
-#         'PORT': '11550',
-#     }
-# }
 
 
 

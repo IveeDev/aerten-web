@@ -331,3 +331,27 @@ AttributeError: 'NoneType' object has no attribute 'title'
 2025-04-03 14:55:38,457 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
 2025-04-03 14:58:39,610 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/employee_management/admin.py changed, reloading.
 2025-04-03 14:58:41,258 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:19:01,007 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:19:51,347 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/common.py changed, reloading.
+2025-04-03 15:19:52,709 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:20:26,360 (WARNING) - django.request - Not Found: /api/v1/employees/99999/
+2025-04-03 15:20:26,455 (WARNING) - django.request - Unauthorized: /api/v1/employees/7841391CC0B0/
+2025-04-03 15:20:27,971 (WARNING) - django.request - Forbidden: /api/v1/employees/493250154037/
+2025-04-03 15:20:31,353 (WARNING) - django.request - Bad Request: /api/v1/employees/00C7BA34B294/
+2025-04-03 15:20:34,426 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-04-03 15:20:34,516 (WARNING) - django.request - Unauthorized: /api/v1/employees/AAC24C2E7B3D/
+2025-04-03 15:20:36,107 (WARNING) - django.request - Forbidden: /api/v1/employees/235EB0CF4564/
+2025-04-03 15:20:39,224 (WARNING) - django.request - Not Found: /api/v1/employees/9999999/
+2025-04-03 15:20:39,564 (WARNING) - django.request - Unauthorized: /api/v1/permissions/
+2025-04-03 15:20:40,981 (WARNING) - django.request - Forbidden: /api/v1/permissions/
+2025-04-03 15:20:42,210 (WARNING) - django.request - Bad Request: /api/v1/permissions/
+2025-04-03 15:20:43,698 (WARNING) - django.request - Not Found: /api/v1/permissions/99999/
+2025-04-03 15:20:43,750 (WARNING) - django.request - Unauthorized: /api/v1/permissions/3/
+2025-04-03 15:20:45,102 (WARNING) - django.request - Forbidden: /api/v1/permissions/4/
+2025-04-03 15:20:46,592 (WARNING) - django.request - Bad Request: /api/v1/permissions/5/
+2025-04-03 15:20:51,581 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-04-03 15:20:51,729 (WARNING) - django.request - Unauthorized: /api/v1/permissions/7/
+2025-04-03 15:20:53,588 (WARNING) - django.request - Forbidden: /api/v1/permissions/8/
+2025-04-03 15:20:56,886 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
+2025-04-03 15:25:30,796 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
+2025-04-03 15:25:32,030 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
