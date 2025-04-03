@@ -9,7 +9,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 
-ALLOWED_HOSTS = ['web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com', '127.0.0.1']
+ALLOWED_HOSTS = ['web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com', '127.0.0.1', 'localhost', 'apable-rolypoly-a4e40e.netlify.app']
 
 
 
@@ -25,4 +25,4 @@ DATABASES = {
 }
 
 
-CORS_ALLOWED_ORIGINS = ["https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com", "https://capable-rolypoly-a4e40e.netlify.app"]
+CORS_ALLOWED_ORIGINS = ["https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com", "https://capable-rolypoly-a4e40e.netlify.app", "http://localhost:5173"]
