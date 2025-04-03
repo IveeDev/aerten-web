@@ -35,8 +35,9 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ["first_name__istartswith", "last_name__istartswith"]
     
     
+    @admin.display(description="Role")  # Properly formats and labels the field in admin
     def get_role(self, employee):
-        return employee.role.title
+        return employee.role.title if employee.role else ""
     
     
     # Many to Many relationship
