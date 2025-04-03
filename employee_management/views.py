@@ -30,17 +30,7 @@ class PermissionViewSet(BaseViewSet):
     serializer_class = PermissionSerializer
     permission_classes = [IsAdminOrReadOnly]
     
-    
-    def list(self, request, *args, **kwargs):
-        cache_key = "permissions_list"
-        cached_permissions = cache.get(cache_key)
 
-        if cached_permissions:
-            return Response(cached_permissions)
-
-        response = super().list(request, *args, **kwargs)
-        cache.set(cache_key, response.data)
-        return response
 
 class TeamViewSet(BaseViewSet):
     queryset = Team.objects.all()
@@ -56,19 +46,6 @@ class RoleViewSet(BaseViewSet):
     permission_classes = [IsAdminOrReadOnly]
     
     
-    def list(self, request, *args, **kwargs):
-        cache_key = "roles_list"
-        cached_roles = cache.get(cache_key)
-
-        if cached_roles:
-            return Response(cached_roles)
-
-        response = super().list(request, *args, **kwargs)
-        cache.set(cache_key, response.data, timeout=3600)  # Cache for 1 hour
-        return response
-    
-
-
 class EmployeeViewSet(BaseViewSet):
     queryset = Employee.objects.prefetch_related('team').select_related('role').all()
     serializer_class = EmployeeSerializer
