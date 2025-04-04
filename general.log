@@ -355,3 +355,7 @@ AttributeError: 'NoneType' object has no attribute 'title'
 2025-04-03 15:20:56,886 (WARNING) - django.request - Not Found: /api/v1/permissions/9999999/
 2025-04-03 15:25:30,796 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/aerten/settings/dev.py changed, reloading.
 2025-04-03 15:25:32,030 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:53:15,377 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:54:58,818 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:55:09,397 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-03 15:56:13,828 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader

@@ -24,15 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 
-
-
-
-
-
-
-
-
-
 CSRF_TRUSTED_ORIGINS = ['https://web-xa1s8fkrksww.up-de-fra1-k8s-1.apps.run-on-seenode.com']
 
 
