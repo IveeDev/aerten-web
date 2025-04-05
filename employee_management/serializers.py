@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from .signals import employee_created
+from core.serializers import UserSerializer
 from employee_management.models import Employee, Role, Permission, Team, Education, Address, Request, EmployeeImage
 
 
@@ -39,7 +40,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Role
-        fields = ['id', 'title', 'description', 'reports_to', 'employment_type', 'permission']
+        fields = ['id', 'title', 'description', 'reports_to', 'employment_type', 'permission', 'team']
         
     def create(self, validated_data):
         role_title = validated_data.get("title").strip().lower()
@@ -161,10 +162,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
     educations = EducationSerializer(many=True, read_only=True)
     address = AddressSerializer(read_only=True)
     image = EmployeeImageSerializer(read_only=True)
-    user_id = serializers.IntegerField(read_only=True)
+    # user_id = serializers.IntegerField(read_only=True)
+    user = UserSerializer(read_only=True)
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
     team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
     
     class Meta:
         model = Employee
-        fields = ['id', 'user_id', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level', 'image', 'educations', 'address']
+        fields = ['id', 'user', 'phone', 'join_date', 'email', 'birth_date', 'gender', 'social_handle', 'employment_status', 'role', 'team', 'access_level', 'image', 'educations', 'address']
