@@ -164,8 +164,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
     image = EmployeeImageSerializer(read_only=True)
     # user_id = serializers.IntegerField(read_only=True)
     user = UserSerializer(read_only=True)
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
-    team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
+    # role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
+    # team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
+    role = RoleSerializer()
+    team = TeamSerializer(many=True)
     
     class Meta:
         model = Employee

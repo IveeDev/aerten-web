@@ -439,3 +439,6 @@ Traceback (most recent call last):
 AssertionError: The field 'user' was declared on serializer EmployeeSerializer, but has not been included in the 'fields' option.
 2025-04-05 18:18:10,447 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/employee_management/serializers.py changed, reloading.
 2025-04-05 18:18:13,850 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-05 19:44:20,236 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-05 19:44:32,372 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-05 19:48:53,564 (WARNING) - django.request - Forbidden: /api/v1/employees/assign_role/
