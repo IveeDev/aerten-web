@@ -90,7 +90,7 @@ class EmployeeViewSet(BaseViewSet):
             employee = serializer.validated_data["employee_id"]
             employee.role = role
             employee.save()
-            return Response({"message": f"Role assigned to employee {employee.id}"}, status=status.HTTP_200_OK)
+            return Response({"message": f"Role assigned to employee {employee.user.username} {employee.id}"}, status=status.HTTP_200_OK)
 
         if "employee_ids" in serializer.validated_data:
             employees = serializer.validated_data["employee_ids"]

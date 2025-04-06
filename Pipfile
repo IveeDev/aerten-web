@@ -20,6 +20,8 @@ whitenoise = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 dj-database-url = "*"
+django-extensions = "*"
+pydotplus = "*"
 
 [dev-packages]
 pytest = "*"

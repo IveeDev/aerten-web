@@ -51,6 +51,12 @@ Aerten is a web-based employee management tool designed for businesses of all si
 
 `POST /api/v1/employees/assign_role/
 
+## Entity Relationship Diagram (ERD)
+
+The following diagram provides an overview of the relationships between models in the backend:
+
+![Entity Relationship Diagram](assets/erd.png)
+
 ## Installation
 
 ### Prerequisites
