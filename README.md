@@ -57,6 +57,8 @@ The following diagram provides an overview of the relationships between models i
 
 ![Entity Relationship Diagram](assets/erd.png)
 
+![Entity Relationship Diagram MYSQLworkbench](assets/Erd-mysql-wb.png)
+
 ## Installation
 
 ### Prerequisites
