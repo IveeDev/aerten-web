@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'django_extensions',
+    'allauth',
+    'allauth.socialaccount',
+    'allauth.account',
+    'allauth.socialaccount.providers.google',
     'corsheaders',
     'rest_framework',
     'djoser',
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -59,6 +64,20 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '1014899292783-8ija2mq0jqmg5f9blr3q1ac2b5h2m24s.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
 
 INTERNAL_IPS = [
     # ...
@@ -91,6 +110,16 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'aerten.wsgi.application'

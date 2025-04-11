@@ -56,9 +56,27 @@ class AssignRoleSerializer(serializers.Serializer):
     )
     employee_id = serializers.PrimaryKeyRelatedField(
         queryset=Employee.objects.all(),
-        required=False  # Make it optional
+        required=False  
     )
 
+
+    def validate(self, data):
+        if not data.get("employee_id") and not data.get("employee_ids"):
+            raise serializers.ValidationError("Either 'employee_id' or 'employee_ids' must be provided.")
+        if data.get("employee_id") and data.get("employee_ids"):
+            raise serializers.ValidationError("Provide only 'employee_id' OR 'employee_ids', not both.")
+        return data
+    
+class AddToTeamSerializer(serializers.Serializer):
+    team_id = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all())
+    employee_ids = serializers.ListField(
+        child=serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all()),
+        required=False  # Make it optional
+    )
+    employee_id = serializers.PrimaryKeyRelatedField(
+        queryset=Employee.objects.all(),
+        required=False  # Make it optional
+    )
 
     def validate(self, data):
         if not data.get("employee_id") and not data.get("employee_ids"):

@@ -22,6 +22,8 @@ psycopg2-binary = "*"
 dj-database-url = "*"
 django-extensions = "*"
 pydotplus = "*"
+black = "*"
+django-allauth = {extras = ["socialaccount"], version = "*"}
 
 [dev-packages]
 pytest = "*"

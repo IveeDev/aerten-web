@@ -4,7 +4,7 @@ from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.decorators import action
 from .models import Permission, Team, Role, Employee, EmployeeImage, Education, Address, Request
-from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EmployeeImageSerializer, EducationSerializer, AddressSerializer, RequestSerializer
+from .serializers import PermissionSerializer, AssignRoleSerializer, TeamSerializer, RoleSerializer, EmployeeSerializer, EmployeeImageSerializer, EducationSerializer, AddressSerializer, RequestSerializer, AddToTeamSerializer
 from .filters import RoleFilter, EmployeeFilter, RequestFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, IsAdminOrManager, IsAdminManagerOrOwner
@@ -44,6 +44,9 @@ class RoleViewSet(BaseViewSet):
     filterset_class = RoleFilter
     search_fields = ["title", "description"]
     permission_classes = [IsAdminOrReadOnly]
+    
+    
+    
     
     
 class EmployeeViewSet(BaseViewSet):
@@ -98,7 +101,73 @@ class EmployeeViewSet(BaseViewSet):
                 employee.role = role
                 employee.save()
             return Response({"message": f"Role assigned to {len(employees)} employees"}, status=status.HTTP_200_OK)
+        
+        
+    @action(detail=False, methods=['post'], url_path='add_to_team', serializer_class=AddToTeamSerializer, permission_classes=[IsAdminUser])
+    def add_to_team(self, request, pk=None):
+        serializer = AddToTeamSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
+        team = serializer.validated_data["team_id"]
+        MAX_TEAMS = 3
+        
+        def assign_team_to_employee(employee):
+            current_team_count = employee.team.count()
+            if current_team_count >= MAX_TEAMS:
+                raise serializers.ValidationError(
+                f"Employee {employee.user.username} already belongs to {current_team_count} teams (maximum is {MAX_TEAMS})"
+            )
+            
+            # Check if employee is already in this team
+            
+            if employee.team.filter(id=team.id).exists():
+                raise serializers.ValidationError(
+                    f"Employee {employee.user.username} is already in this team."
+                )
+            employee.team.add(team)
+            employee.save()
+            
+                
+
+        if "employee_id" in serializer.validated_data:
+            employee = serializer.validated_data["employee_id"]
+            try:
+                assign_team_to_employee(employee)
+                return Response(
+                    {"message": f"Team assigned to employee, {employee.user.username} {employee.id}"},
+                    status=status.HTTP_200_OK
+                )
+            except serializers.ValidationError as e:
+                return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        if "employee_ids" in serializer.validated_data:
+            employees = serializer.validated_data["employee_ids"]
+            success_count = 0
+            errors = []
+            
+            for employee in employees:
+                try:
+                    assign_team_to_employee(employee)
+                    success_count += 1
+                except serializers.ValidationError as e:
+                    errors.append(f"Employee ID {employee.id}: {str(e)}")
+            
+            if errors:
+                return Response(
+                    {
+                        "message": f"Team assigned to {success_count} employees",
+                        "errors": errors
+                    },
+                    status=status.HTTP_207_MULTI_STATUS  # Or use 200 if you prefer
+                )
+                
+            return Response(
+                {"message": f"Team assigned to {success_count} employees"},
+                status=status.HTTP_200_OK
+            )
 
 class EmployeeImageViewSet(ModelViewSet):
     serializer_class = EmployeeImageSerializer
