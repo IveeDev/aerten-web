@@ -109,65 +109,18 @@ class EmployeeViewSet(BaseViewSet):
         serializer.is_valid(raise_exception=True)
 
         team = serializer.validated_data["team_id"]
-        MAX_TEAMS = 3
-        
-        def assign_team_to_employee(employee):
-            current_team_count = employee.team.count()
-            if current_team_count >= MAX_TEAMS:
-                raise serializers.ValidationError(
-                f"Employee {employee.user.username} already belongs to {current_team_count} teams (maximum is {MAX_TEAMS})"
-            )
-            
-            # Check if employee is already in this team
-            
-            if employee.team.filter(id=team.id).exists():
-                raise serializers.ValidationError(
-                    f"Employee {employee.user.username} is already in this team."
-                )
-            employee.team.add(team)
-            employee.save()
-            
-                
 
         if "employee_id" in serializer.validated_data:
             employee = serializer.validated_data["employee_id"]
-            try:
-                assign_team_to_employee(employee)
-                return Response(
-                    {"message": f"Team assigned to employee, {employee.user.username} {employee.id}"},
-                    status=status.HTTP_200_OK
-                )
-            except serializers.ValidationError as e:
-                return Response(
-                    {"error": str(e)},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+            employee.team.add(team)
+            return Response({"message": f"Team assigned to employee, {employee.user.username} {employee.id}"}, status=status.HTTP_200_OK)
 
         if "employee_ids" in serializer.validated_data:
             employees = serializer.validated_data["employee_ids"]
-            success_count = 0
-            errors = []
             
             for employee in employees:
-                try:
-                    assign_team_to_employee(employee)
-                    success_count += 1
-                except serializers.ValidationError as e:
-                    errors.append(f"Employee ID {employee.id}: {str(e)}")
-            
-            if errors:
-                return Response(
-                    {
-                        "message": f"Team assigned to {success_count} employees",
-                        "errors": errors
-                    },
-                    status=status.HTTP_207_MULTI_STATUS  # Or use 200 if you prefer
-                )
-                
-            return Response(
-                {"message": f"Team assigned to {success_count} employees"},
-                status=status.HTTP_200_OK
-            )
+                employee.team.add(team)
+            return Response({"message": f"Added to {len(employees)} employees"})
 
 class EmployeeImageViewSet(ModelViewSet):
     serializer_class = EmployeeImageSerializer

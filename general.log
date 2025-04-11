@@ -453,3 +453,4 @@ AssertionError: The field 'user' was declared on serializer EmployeeSerializer, 
 2025-04-11 17:58:48,557 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
 2025-04-11 17:59:01,654 (INFO) - django.utils.autoreload - /home/iviidev/projects/aerten/employee_management/views.py changed, reloading.
 2025-04-11 17:59:03,722 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader
+2025-04-11 18:16:41,398 (INFO) - django.utils.autoreload - Watching for file changes with StatReloader

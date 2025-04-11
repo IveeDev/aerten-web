@@ -79,11 +79,35 @@ class AddToTeamSerializer(serializers.Serializer):
     )
 
     def validate(self, data):
+        
         if not data.get("employee_id") and not data.get("employee_ids"):
             raise serializers.ValidationError("Either 'employee_id' or 'employee_ids' must be provided.")
         if data.get("employee_id") and data.get("employee_ids"):
             raise serializers.ValidationError("Provide only 'employee_id' OR 'employee_ids', not both.")
+        
+        
+        team = data.get('team_id')
+        employee = data.get('employee_id')
+        employees = data.get('employee_ids', [])
+        
+        if employee:
+            self._validate_employee_team_count(employee, team)
+        
+        for emp in employees:
+            self._validate_employee_team_count(emp, team)
         return data
+        
+
+      
+    
+    def _validate_employee_team_count(self, employee, team):
+        MAX_TEAM_COUNT = 3  # Define the maximum number of teams an employee can belong to
+        if employee.team.count() >= MAX_TEAM_COUNT:
+            raise serializers.ValidationError(f"Employee {employee.id} already belongs to {MAX_TEAM_COUNT} teams.")
+        if employee.team.filter(id=team.id).exists():
+            raise serializers.ValidationError(
+                f"Employee {employee.id} is already in this team"
+            )
     
 class EmployeeImageSerializer(serializers.ModelSerializer):
     class Meta:
