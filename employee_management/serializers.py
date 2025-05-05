@@ -129,10 +129,7 @@ class EmployeeImageSerializer(serializers.ModelSerializer):
         return EmployeeImage.objects.create(employee=employee, **validated_data)
 
 
-    
-
-
-    
+       
 
 class RequestSerializer(serializers.ModelSerializer):
     approver = serializers.PrimaryKeyRelatedField(
@@ -204,10 +201,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     educations = EducationSerializer(many=True, read_only=True)
     address = AddressSerializer(read_only=True)
     image = EmployeeImageSerializer(read_only=True)
-    # user_id = serializers.IntegerField(read_only=True)
     user = UserSerializer(read_only=True)
-    # role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())  # Accept role ID
-    # team = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True)  # Accept team IDs
     role = RoleSerializer()
     team = TeamSerializer(many=True)
     

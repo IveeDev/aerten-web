@@ -46,6 +46,10 @@ class RoleViewSet(BaseViewSet):
     permission_classes = [IsAdminOrReadOnly]
     
     
+class EmployeeFilter(DjangoFilterBackend):
+    pass
+    
+    
     
     
     

@@ -33,17 +33,7 @@ def retrieve_employee(api_client):
     return do_retrieve_employee
 
 
-# @pytest.fixture
-# def get_me(api_client):
-#     def do_get_me():
-#         return api_client.get('/api/v1/employees/me/')
-#     return do_get_me
 
-# @pytest.fixture
-# def update_me(api_client):
-#     def do_update_me(data):
-#         return api_client.put('/api/v1/employees/me/', data)
-#     return do_update_me
 
 @pytest.fixture
 def me_employee(api_client):
